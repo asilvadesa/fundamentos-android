@@ -31,10 +31,12 @@ public class ListaAlunosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_alunos);
         setTitle(TITULO_APPBAR);
         configuraFabNovoAluno();
-
+        configuraLista();
         dao.salva(new Aluno("Anderson", "25574123", "asilvadesa@gmail.com"));
         dao.salva(new Aluno("Maria", "98745231", "maria@gmail.com"));
         dao.salva(new Aluno("Agata", "5789410354", "agata@gmail.com"));
+
+
     }
 
     private void configuraFabNovoAluno() {
@@ -54,13 +56,14 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        configuraLista();
+        adapter.clear();
+        adapter.addAll(dao.todos());
     }
 
     private void configuraLista() {
         ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
-        final List<Aluno> alunos = dao.todos();
-        configuraAdapter(listaDeAlunos, alunos);
+
+        configuraAdapter(listaDeAlunos);
         configuraListenerDeCliquePorItem(listaDeAlunos);
         listaDeAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -90,11 +93,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
         startActivity(intentVaiParaFormulario);
     }
 
-    private void configuraAdapter(ListView listaDeAlunos, List<Aluno> alunos) {
+    private void configuraAdapter(ListView listaDeAlunos) {
         adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1,
-                alunos);
+                android.R.layout.simple_list_item_1);
         listaDeAlunos.setAdapter(adapter);
     }
 }
