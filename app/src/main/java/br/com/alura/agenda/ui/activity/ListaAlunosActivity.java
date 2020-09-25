@@ -6,11 +6,17 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.alura.agenda.R;
 import br.com.alura.agenda.dao.AlunoDAO;
@@ -33,7 +39,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         configuraLista();
 
          dao.salva(new Aluno("Anderson", "25574123", "asilvadesa@gmail.com"));
-         dao.salva(new Aluno("Maria", "98745231", "maria@gmail.com"));
+          dao.salva(new Aluno("Maria", "98745231", "maria@gmail.com"));
 
     }
 
@@ -115,7 +121,34 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private void configuraAdapter(ListView listaDeAlunos) {
         adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1);
-        listaDeAlunos.setAdapter(adapter);
+                R.layout.item_aluno);
+        listaDeAlunos.setAdapter(new BaseAdapter() {
+
+           private final List<Aluno> alunos = new ArrayList<>();
+
+            @Override
+            public int getCount() {
+                return alunos.size();
+            }
+
+            @Override
+            public Aluno getItem(int posicao) {
+                return alunos.get(posicao);
+            }
+
+            @Override
+            public long getItemId(int posicao) {
+                return alunos.get(posicao).getId();
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                View viewCriada = LayoutInflater.
+                        from(ListaAlunosActivity.this)
+                        .inflate(R.layout.item_aluno, viewGroup);
+
+                return viewCriada;
+            }
+        });
     }
 }
